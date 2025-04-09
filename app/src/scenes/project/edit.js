@@ -17,7 +17,7 @@ export default function EditProject() {
   useEffect(() => {
     (async () => {
       const { data: u } = await api.get(`/project/${id}`);
-      setProject(u);
+      setProject(Array.isArray(u) ? u[0] : u);
     })();
   }, []);
 
@@ -32,6 +32,7 @@ export default function EditProject() {
   }
 
   if (!project) return <Loader />;
+  console.log("project ===>", project);
   return (
     <div>
       <div className="appContainer pt-24">
@@ -139,7 +140,7 @@ export default function EditProject() {
                     <div className="text-[14px] text-[#212325] font-medium	">Autres</div>
                     {(values.links || []).map((link) => {
                       return (
-                        <div className="flex flex-1 flex-row mt-2 items-center gap-1">
+                        <div key={link.index} className="flex flex-1 flex-row mt-2 items-center gap-1">
                           <div className="flex gap-1 flex-1 items-center">
                             <input
                               className="projectsInput mt-0 text-[14px] font-normal text-[#212325] rounded-[10px]"
