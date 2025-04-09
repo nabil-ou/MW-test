@@ -37,7 +37,7 @@ const ProjectList = () => {
 
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} filter={filter} setFilter={setFilter} />
+      <Create onChangeSearch={handleSearch} filter={filter} setFilter={setFilter} projectsFiltered={activeProjects} projects={projects} />
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (
@@ -94,14 +94,22 @@ const Budget = ({ project }) => {
   return <ProgressBar percentage={width} max={budget_max_monthly} value={total} />;
 };
 
-const Create = ({ onChangeSearch, filter, setFilter }) => {
+const Create = ({ onChangeSearch, filter, setFilter, projectsFiltered, projects }) => {
   const [open, setOpen] = useState(false);
   const history = useHistory();
 
+  const displayCount =
+    projectsFiltered && projects ? (
+      <div>
+        <span className="text-sm font-normal text-gray-500">
+          <span className="text-base font-medium text-gray-700">{projectsFiltered.length}</span> of {projects.length}
+        </span>
+      </div>
+    ) : null;
+
   return (
-    <div className="mb-[10px] ">
+    <div className="mb-[10px]">
       <div className="flex md:flex-row justify-between items-center">
-        {/* Search Input */}
         <div className="flex gap-2 flex-wrap items-center">
           <div className="relative text-[#A0A6B1]">
             <span className="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -120,6 +128,7 @@ const Create = ({ onChangeSearch, filter, setFilter }) => {
             />
           </div>
           <FilterStatus filter={filter} setFilter={setFilter} />
+          {displayCount}
         </div>
 
         {/* Create New Button */}
