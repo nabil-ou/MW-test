@@ -2,12 +2,11 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
-
 import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import ProgressBar from "../../components/ProgressBar";
-
 import api from "../../services/api";
+
 const ProjectList = () => {
   const [projects, setProjects] = useState(null);
   const [activeProjects, setActiveProjects] = useState(null);
@@ -94,6 +93,7 @@ const Budget = ({ project }) => {
 
 const Create = ({ onChangeSearch }) => {
   const [open, setOpen] = useState(false);
+  const history = useHistory();
 
   return (
     <div className="mb-[10px] ">
@@ -146,6 +146,7 @@ const Create = ({ onChangeSearch }) => {
                   if (!res.ok) throw res;
                   toast.success("Created!");
                   setOpen(false);
+                  history.push(`/project/${res.data._id}`);
                 } catch (e) {
                   console.log(e);
                   toast.error("Some Error!", e.code);
@@ -153,7 +154,7 @@ const Create = ({ onChangeSearch }) => {
                 setSubmitting(false);
               }}>
               {({ values, handleChange, handleSubmit, isSubmitting }) => (
-                <React.Fragment>
+                <form onSubmit={handleSubmit}>
                   <div className="w-full md:w-6/12 text-left">
                     <div>
                       <div className="text-[14px] text-[#212325] font-medium	">Name</div>
@@ -162,11 +163,11 @@ const Create = ({ onChangeSearch }) => {
                     <LoadingButton
                       className="mt-[1rem] bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]"
                       loading={isSubmitting}
-                      onClick={handleSubmit}>
+                      type="submit">
                       Create
                     </LoadingButton>
                   </div>
-                </React.Fragment>
+                </form>
               )}
             </Formik>
           </div>
