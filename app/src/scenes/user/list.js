@@ -87,7 +87,6 @@ const NewList = () => {
 
 const Create = () => {
   const [open, setOpen] = useState(false);
-
   const history = useHistory();
 
   return (
@@ -105,12 +104,21 @@ const Create = () => {
               e.stopPropagation();
             }}>
             <Formik
-              initialValues={{}}
+              initialValues={{
+                username: "",
+                email: "",
+                password: "",
+              }}
               onSubmit={async (values, { setSubmitting }) => {
                 try {
+                  const capitalizeFirstLetter = (string) => {
+                    if (!string) return "";
+                    return string.charAt(0).toUpperCase() + string.slice(1);
+                  };
                   values.status = "active";
                   values.availability = "not available";
                   values.role = "ADMIN";
+                  values.name = capitalizeFirstLetter(values.username);
                   const res = await api.post("/user", values);
                   if (!res.ok) throw res;
                   toast.success("Created!");
@@ -123,7 +131,7 @@ const Create = () => {
                 setSubmitting(false);
               }}>
               {({ values, handleChange, handleSubmit, isSubmitting }) => (
-                <React.Fragment>
+                <form onSubmit={handleSubmit}>
                   <div>
                     <div className="flex justify-between flex-wrap">
                       <div className="w-full md:w-[48%] mt-2">
@@ -139,19 +147,22 @@ const Create = () => {
                       {/* Password */}
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Password</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="password" value={values.password} onChange={handleChange} />
+                        <input
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="password"
+                          type="password"
+                          value={values.password}
+                          onChange={handleChange}
+                        />
                       </div>
                     </div>
                   </div>
 
                   <br />
-                  <LoadingButton
-                    className="mt-[1rem]  bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]"
-                    loading={isSubmitting}
-                    onClick={handleSubmit}>
+                  <LoadingButton className="mt-[1rem]  bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} type="submit">
                     Save
                   </LoadingButton>
-                </React.Fragment>
+                </form>
               )}
             </Formik>
           </div>
