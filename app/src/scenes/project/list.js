@@ -10,6 +10,7 @@ import api from "../../services/api";
 const ProjectList = () => {
   const [projects, setProjects] = useState(null);
   const [activeProjects, setActiveProjects] = useState(null);
+  const [filter, setFilter] = useState({ status: "", search: "" });
 
   const history = useHistory();
 
@@ -21,20 +22,22 @@ const ProjectList = () => {
   }, []);
 
   useEffect(() => {
-    const p = (projects || []).filter((p) => p.status === "active");
-    setActiveProjects(p);
-  }, [projects]);
+    if (!projects) return;
+    const filtered = projects
+      .filter((p) => !filter.status || p.status === filter.status)
+      .filter((p) => !filter.search || p.name.toLowerCase().includes(filter.search.toLowerCase()));
+    setActiveProjects(filtered);
+  }, [projects, filter]);
 
   if (!projects || !activeProjects) return <Loader />;
 
   const handleSearch = (searchedValue) => {
-    const p = (projects || []).filter((p) => p.status === "active").filter((e) => e.name.toLowerCase().includes(searchedValue.toLowerCase()));
-    setActiveProjects(p);
+    setFilter((prev) => ({ ...prev, search: searchedValue }));
   };
 
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} />
+      <Create onChangeSearch={handleSearch} filter={filter} setFilter={setFilter} />
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (
@@ -91,30 +94,34 @@ const Budget = ({ project }) => {
   return <ProgressBar percentage={width} max={budget_max_monthly} value={total} />;
 };
 
-const Create = ({ onChangeSearch }) => {
+const Create = ({ onChangeSearch, filter, setFilter }) => {
   const [open, setOpen] = useState(false);
   const history = useHistory();
 
   return (
     <div className="mb-[10px] ">
-      <div className="flex justify-between flex-wrap">
+      <div className="flex md:flex-row justify-between items-center">
         {/* Search Input */}
-        <div className="relative text-[#A0A6B1]">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-            <button type="submit" className="p-1">
-              <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-6 h-6">
-                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-            </button>
-          </span>
-          <input
-            type="search"
-            name="q"
-            className="py-2 w-[364px] h-[48px] text-[16px] font-medium text-[black] rounded-[10px] bg-[#F9FBFD] border border-[#FFFFFF] pl-10"
-            placeholder="Search"
-            onChange={(e) => onChangeSearch(e.target.value)}
-          />
+        <div className="flex gap-2 flex-wrap items-center">
+          <div className="relative text-[#A0A6B1]">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+              <button type="submit" className="p-1">
+                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-6 h-6">
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </button>
+            </span>
+            <input
+              type="search"
+              name="q"
+              className="py-2 w-[364px] h-[48px] text-[16px] font-medium text-[black] rounded-[10px] bg-[#F9FBFD] border border-[#FFFFFF] pl-10"
+              placeholder="Search"
+              onChange={(e) => onChangeSearch(e.target.value)}
+            />
+          </div>
+          <FilterStatus filter={filter} setFilter={setFilter} />
         </div>
+
         {/* Create New Button */}
         <button
           className="bg-[#0560FD] text-[#fff] py-[12px] px-[20px] rounded-[10px] text-[16px] font-medium"
@@ -173,6 +180,28 @@ const Create = ({ onChangeSearch }) => {
           </div>
         </div>
       ) : null}
+    </div>
+  );
+};
+
+const FilterStatus = ({ filter, setFilter }) => {
+  return (
+    <div className="flex">
+      <select
+        className="w-[180px] bg-[#FFFFFF] text-[14px] text-[#212325] font-normal py-2 px-[14px] rounded-[10px] border-r-[16px] border-[transparent] cursor-pointer"
+        value={filter.status}
+        onChange={(e) => setFilter({ ...filter, status: e.target.value })}>
+        <option disabled>Status</option>
+        <option value="">All status</option>
+        {[
+          { value: "active", label: "Active" },
+          { value: "inactive", label: "Inactive" },
+        ].map((e) => (
+          <option key={e.value} value={e.value}>
+            {e.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
