@@ -7,7 +7,7 @@ import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
 
-export default () => {
+export default function UserView() {
   const [user, setUser] = useState(null);
   const { id } = useParams();
   useEffect(() => {
@@ -26,7 +26,7 @@ export default () => {
       </div>
     </div>
   );
-};
+}
 
 const Detail = ({ user }) => {
   const history = useHistory();
@@ -53,7 +53,7 @@ const Detail = ({ user }) => {
       }}>
       {({ values, handleChange, handleSubmit, isSubmitting }) => {
         return (
-          <React.Fragment>
+          <form onSubmit={handleSubmit}>
             <div className="flex justify-between flex-wrap mt-4">
               <div className="w-full md:w-[260px] mt-[10px] md:mt-0 ">
                 <div className="text-[14px] text-[#212325] font-medium	">Name</div>
@@ -98,7 +98,7 @@ const Detail = ({ user }) => {
                   name="days_worked"
                   value={values.days_worked}
                   onChange={handleChange}
-                />{" "}
+                />
               </div>
               <div className="w-full md:w-[260px] ">
                 <div className="text-[14px] text-[#212325] font-medium	">Cost per day</div>
@@ -132,14 +132,14 @@ const Detail = ({ user }) => {
             </div>
 
             <div className="flex  mt-2">
-              <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onChange={handleSubmit}>
+              <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} type="submit">
                 Update
               </LoadingButton>
               <button className="ml-[10px] bg-[#F43F5E] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" onClick={deleteData}>
                 Delete
               </button>
             </div>
-          </React.Fragment>
+          </form>
         );
       }}
     </Formik>
