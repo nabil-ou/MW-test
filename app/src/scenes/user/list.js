@@ -10,7 +10,7 @@ const NewList = () => {
   const [users, setUsers] = useState(null);
   const [projects, setProjects] = useState([]);
   const [usersFiltered, setUsersFiltered] = useState(null);
-  const [filter, setFilter] = useState({ status: "active", availability: "", search: "" });
+  const [filter, setFilter] = useState({ status: "", availability: "", search: "" });
 
   useEffect(() => {
     (async () => {
