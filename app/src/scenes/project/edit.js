@@ -140,6 +140,25 @@ export default function EditProject() {
                       value={values.objective}
                       onChange={handleChange}></textarea>
                   </div>
+                  <div className="text-xl mt-8">Billing</div>
+                  <div className="w-full mt-3">
+                    <div className="text-[14px] text-[#212325] font-medium mb-2">Add an invoice</div>
+                    <label className="inline-block cursor-pointer bg-white border border-[#E5EAEF] text-[14px] text-[#212325] font-normal px-4 py-2 rounded-[10px] shadow-sm hover:bg-gray-50">
+                      Select a file
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            toast.success(`Fichier "${file.name}" sélectionné`);
+                            // TODO : manage file delivery
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+
                   <div className="text-xl mt-8">Links</div>
                   <div className="w-full mt-3">
                     <div className="text-[14px] text-[#212325] font-medium	">Website</div>
