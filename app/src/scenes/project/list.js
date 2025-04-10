@@ -6,7 +6,7 @@ import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import ProgressBar from "../../components/ProgressBar";
 import api from "../../services/api";
-
+import { formatType, getTypeColor } from "./utils";
 const ProjectList = () => {
   const [projects, setProjects] = useState(null);
   const [activeProjects, setActiveProjects] = useState(null);
@@ -49,7 +49,10 @@ const ProjectList = () => {
                 <div className="flex flex-wrap gap-4 items-center">
                   {hit.logo && <img className="w-[85px] h-[85px] rounded-[8px] object-contain	" src={hit.logo} alt="ProjectImage.png" />}
                   <div className="flex flex-col flex-wrap flex-1">
-                    <div className="text-[18px] text-[#212325] font-semibold flex flex-wrap">{hit.name}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-[18px] text-[#212325] font-semibold flex flex-wrap">{hit.name}</div>
+                      {hit.type && <div className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(hit.type)}`}>{formatType(hit.type)}</div>}
+                    </div>
                   </div>
                 </div>
               </div>

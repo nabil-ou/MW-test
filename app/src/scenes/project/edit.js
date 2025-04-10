@@ -105,6 +105,16 @@ export default function EditProject() {
                         <option value="ONE_TIME">One time</option>
                       </select>
                     </div>
+                    <div className="w-full md:w-[260px] ">
+                      <div className="text-[14px] text-[#212325] font-medium	">Project type</div>
+                      <select className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="type" value={values.type} onChange={handleChange}>
+                        <option value=""></option>
+                        <option value="prospection">Prospection</option>
+                        <option value="startup-project">Startup project</option>
+                        <option value="startup-invest">Startup invest</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div className="w-full mt-3">
